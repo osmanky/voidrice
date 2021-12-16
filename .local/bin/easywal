@@ -1,0 +1,29 @@
+#!/bin/bash
+
+wphome=/home/osmanky/archive/pics/papes/
+
+manualPick () {
+	wpl=$(ls "$wphome" | dmenu -p "give a wallpaper:" -l 10)
+	if [[ -z "$wpl" ]]; then
+		echo "No wallpaper provided" >&2
+		exit 1
+	fi
+	setbg "$wphome/$wpl" && xwallpaper --zoom "$wphome/$wpl"
+	echo "$wpl"
+}
+
+randomPick () {
+	wpl=$(find "${wphome}" -type f | shuf -n 1)
+	setbg "$wpl" && xwallpaper --zoom "$wpl"
+	echo "$wpl"
+}
+
+menu () {
+	input=$(printf "manual\nrandom" | dmenu -p "Set Mode" -i) || exit 1
+	case "$input" in
+		"manual") manualPick ;;
+		"random") randomPick ;;
+	esac
+}
+#apply wal
+menu
